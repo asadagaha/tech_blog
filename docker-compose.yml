@@ -1,11 +1,47 @@
 version: '3'
 services:
   frontend:
+    platform: linux/x86_64 
+    container_name: frontend
     build: 
       context: .
       dockerfile: ./containers/frontend/Dockerfile
-    container_name: frontend
     volumes:
       - ./react/:/usr/src/app
     ports:
       - "80:80"
+  api:
+    platform: linux/x86_64 
+    container_name: backend
+    build: 
+      context: .
+      dockerfile: ./containers/backend/Dockerfile
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - ./rails:/app
+      - gem_data:/usr/local/bundle
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
+  db:
+    platform: linux/x86_64 
+    container_name: db
+    build: ./containers/db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - 5432:5432
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/logs:/var/log
+      - ./db/initdb:/docker-entrypoint-initdb.d
+
+volumes:
+  gem_data:
+    driver: local
+  db_data:
+    driver: local
