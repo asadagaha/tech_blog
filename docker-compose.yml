@@ -1,18 +1,21 @@
 version: '3'
 services:
-  frontend:
+  front:
     platform: linux/x86_64 
-    container_name: frontend
+    container_name: front
     build: 
       context: .
       dockerfile: ./containers/frontend/Dockerfile
+      target: ${FRONT_CONTAINER_BUILD_TARGET}
     volumes:
       - ./react/:/usr/src/app
     ports:
-      - "80:80"
+      - 80:80
+    environment:
+      - CHOKIDAR_USEPOLLING=true
   api:
     platform: linux/x86_64 
-    container_name: backend
+    container_name: api
     build: 
       context: .
       dockerfile: ./containers/backend/Dockerfile

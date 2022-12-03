@@ -1,16 +1,21 @@
-ARG APP_HOME=/home/node/app
+ARG APP_HOME=/usr/src/app
 
-# build stage
-FROM node:14.17 as build
+FROM node:14.17 AS stg
+ARG APP_HOME
+RUN mkdir $APP_HOME
 WORKDIR ${APP_HOME}
 
 COPY ./react ${APP_HOME}
 RUN yarn install
 RUN yarn build
 
-# deploy stage
-FROM nginx:alpine
-COPY --from=build ${APP_HOME}/build /var/www
+ENV PORT 80
+
+CMD ["npm", "start"]
+
+FROM nginx:alpine AS prd
+ARG APP_HOME
+COPY --from=stg ${APP_HOME}/build /var/www
 COPY ./nginx /etc/nginx/conf.d/
 
 WORKDIR /usr/share/nginx/html
