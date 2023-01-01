@@ -5,7 +5,7 @@ ARG APP_HOME
 RUN mkdir $APP_HOME
 WORKDIR ${APP_HOME}
 
-COPY ./react ${APP_HOME}
+COPY ./react_frontend ${APP_HOME}
 RUN yarn install
 RUN yarn build
 
