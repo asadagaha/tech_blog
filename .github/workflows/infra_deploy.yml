@@ -1,7 +1,9 @@
-name: deploy
+name: deploys
 
 on:
   push:
+    branches:
+    - infra
 
 jobs:
   s3ls:
