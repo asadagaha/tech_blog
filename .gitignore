@@ -72,3 +72,12 @@ yarn-debug.log*
 /public/uploads
 
 
+#  Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# .tfvars files
+*.tfvars
