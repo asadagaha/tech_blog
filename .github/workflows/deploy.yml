@@ -14,6 +14,6 @@ jobs:
     steps:
       - uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-region: ${{ secrets.HOGE_TOKEN }}
-          role-to-assume: ${{ secrets.HOGE_TOKEN }}
+          aws-region: ${{ secrets.REGION }}
+          role-to-assume: ${{ secrets.IAM_ROLE }}
       - run: aws s3 ls
