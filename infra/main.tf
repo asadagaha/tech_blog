@@ -9,6 +9,7 @@ module "iam" {
   source        = "./module/iam"
   app           = var.app
   env           = var.env
+  github_repository = var.github_repository
 }
 module "security_group" {
   source   = "./module/security_group"
