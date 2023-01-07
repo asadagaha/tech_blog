@@ -1,9 +1,9 @@
 ### ecs role
 resource "aws_iam_role" "ecs_task_execution_role" {
   name               = "${var.app}-ecs-task-role-${var.env}"
-  assume_role_policy = data.aws_iam_policy_document.assume_role.json
+  assume_role_policy = data.aws_iam_policy_document.assume_role_for_ecs.json
 }
-data "aws_iam_policy_document" "assume_role" {
+data "aws_iam_policy_document" "assume_role_for_ecs" {
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -19,10 +19,13 @@ resource "aws_iam_role_policy_attachment" "amazon_ecs_task_execution_role_policy
 }
 
 ### provider for github actions
+data "tls_certificate" "github_actions" {
+  url = "https://token.actions.githubusercontent.com/.well-known/openid-configuration"
+}
 resource "aws_iam_openid_connect_provider" "github_actions" {
   url             = "https://token.actions.githubusercontent.com"
   client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = ["a031c46782e6e6c662c2c87c76da9aa62ccabd8e"]
+  thumbprint_list = [data.tls_certificate.github_actions.certificates[0].sha1_fingerprint]
 }
 resource "aws_iam_role" "github_actions" {
   name = "${var.app}-github-actions-role-${var.env}"
@@ -44,4 +47,8 @@ resource "aws_iam_role" "github_actions" {
       }
     }]
   })
+}
+resource "aws_iam_role_policy_attachment" "github_actions_policy" {
+    role            = aws_iam_role.github_actions.name
+    policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
