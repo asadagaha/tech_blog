@@ -14,6 +14,17 @@ module Types
       User.find(id)
     end
 
+    field :blogposts, [Types::BlogpostType], null: false
+    def blogposts
+      Blogpost.all
+    end
+    field :blogpost, Types::BlogpostType, null: false do
+      argument :id, ID, required: true
+    end
+    def blogpost(id:)
+      Blogpost.find(id)
+    end
+
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
 

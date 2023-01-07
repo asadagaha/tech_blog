@@ -6,5 +6,5 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 10.times do
-    user = User.create!(name: Faker::Name.name, email: rand(1..100))
+    post = Blogpost.create!(title: Faker::Food.sushi, content: Faker::Food.description )
 end
