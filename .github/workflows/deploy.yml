@@ -1,1 +1,23 @@
-See the 'Note about fast-forwards' in
+name: deploy
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  pushImage:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ secrets.REGION }}
+          role-to-assume: ${{ secrets.IAM_ROLE }}
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
