@@ -81,3 +81,5 @@ yarn-debug.log*
 
 # .tfvars files
 *.tfvars
+
+.DS_Store
