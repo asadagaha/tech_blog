@@ -218,5 +218,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-
+# db
 ./app/db/*
+
