@@ -7,8 +7,6 @@ inputs:
     required: true
   tag:
     required: true
-  registory:
-    required: true
   repository:
     required: true
   dockerfile_dir:
@@ -26,8 +24,13 @@ runs:
       id: login
       uses: aws-actions/amazon-ecr-login@v1
     - name: push container
+      with:
+        tag: ${{ inputs.tag }}
+        registory: ${{ steps.login.outputs.ecr-registry }}
+        repository: ${{ inputs.repository }}
+        dockerfile_dir: ${{ inputs.dockerfile_dir }}
       run: |
         cd app/
-        IMAGE_TAG=$(echo ${{ inputs.tag }} | sed -e "s#refs/tags/##g")
-        docker build -t ${{ steps.login.outputs.ecr-registry }}/${{ inputs.repository }}:$IMAGE_TAG -f ${{ inputs.dockerfile_dir }} .
-        docker push ${{ inputs.registory }}/${{ inputs.repository }}:$IMAGE_TAG
+        IMAGE_TAG=$(echo $tag | sed -e "s#refs/tags/##g")
+        docker build -t $registory/$repository:$IMAGE_TAG -f $dockerfile_dir .
+        docker push $registory/${{ inputs.repository }}:$IMAGE_TAG
