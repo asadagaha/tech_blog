@@ -17,6 +17,7 @@ jobs:
     - run: echo "do infra job" ## terraform deployに修正
   app:
     runs-on: ubuntu-latest
+    needs: infra
     permissions:
       id-token: write
       contents: read
@@ -44,8 +45,6 @@ jobs:
               - 'app/nginx/**'
             db:
               - 'app/containers/db/**'
-      - name: push to ECR
-        run: cd app/
       - if: steps.filter.outputs.front == 'true'
         name: front
         env:
@@ -53,6 +52,7 @@ jobs:
           ECR_REPOSITORY: ${{ secrets.ECR_FRONT_REPO }}
           DOCKERFILE_DIR: containers/frontend/Dockerfile
         run: |
+          cd app/
           IMAGE_TAG=$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f $DOCKERFILE_DIR .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
