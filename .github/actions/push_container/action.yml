@@ -25,6 +25,7 @@ runs:
       uses: aws-actions/amazon-ecr-login@v1
       
     - name: push container
+      working-directory: ./app
       uses: docker/build-push-action@v2
       id: build-image
       with:

@@ -54,7 +54,7 @@ jobs:
           iam_role: ${{ secrets.IAM_ROLE }}
           tag: ${{ github.ref }}
           repository: ${{ secrets.ECR_FRONT_REPO }}
-          dockerfile_dir: app/containers/frontend/Dockerfile
+          dockerfile_dir: ./containers/frontend/Dockerfile
   app_back:
     needs: changes
     if: ${{ needs.changes.outputs.app_back == 'true' }}
@@ -70,4 +70,4 @@ jobs:
           region: ${{ secrets.REGION }}
           iam_role: ${{ secrets.IAM_ROLE }}
           repository: ${{ secrets.ECR_BACK_REPO }}
-          dockerfile_dir: app/containers/backend/Dockerfile
+          dockerfile_dir: ./containers/backend/Dockerfile
