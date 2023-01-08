@@ -8,7 +8,7 @@ on:
       - 'infra/**'  
     branches:
       - main
-      
+
 jobs:
   changes:
     runs-on: ubuntu-latest
@@ -54,7 +54,7 @@ jobs:
           iam_role: ${{ secrets.IAM_ROLE }}
           tag: ${{ github.ref }}
           repository: ${{ secrets.ECR_FRONT_REPO }}
-          dockerfile_dir: containers/frontend/Dockerfile
+          dockerfile_dir: app/containers/frontend/Dockerfile
   app_back:
     needs: changes
     if: ${{ needs.changes.outputs.app_back == 'true' }}
@@ -71,4 +71,4 @@ jobs:
           iam_role: ${{ secrets.IAM_ROLE }}
           tag: ${{ github.ref }}
           repository: ${{ secrets.ECR_BACK_REPO }}
-          dockerfile_dir: containers/backend/Dockerfile
+          dockerfile_dir: app/containers/backend/Dockerfile
