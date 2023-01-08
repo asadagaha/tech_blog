@@ -15,6 +15,7 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v2
+      - uses: dorny/paths-filter@v2
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -24,10 +25,25 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
       - name: push front container
+        id: changes
+        with:
+          filters: |
+            front:
+              - 'app/containers/frontend/**'
+              - 'app/react_frontend/**'
+              - 'app/nginx/**'
+            back:
+              - 'app/containers/frontend/**'
+              - 'app/react_frontend/**'
+              - 'app/nginx/**'
+            db:
+              - 'app/containers/db/**'
+
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_FRONT_REPO }}
           DOCKERFILE_DIR: containers/frontend/Dockerfile
+        - if: steps.front_changes.outputs.src == 'true'
         run: |
           cd app/
           IMAGE_TAG=$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
