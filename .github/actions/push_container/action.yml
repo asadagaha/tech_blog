@@ -24,7 +24,7 @@ runs:
       id: login
       uses: aws-actions/amazon-ecr-login@v1
     - name: push container
-      with:
+      env:
         tag: ${{ inputs.tag }}
         registory: ${{ steps.login.outputs.ecr-registry }}
         repository: ${{ inputs.repository }}
