@@ -22,15 +22,9 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v2    
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-region: ${{ secrets.REGION }}
-          role-to-assume: ${{ secrets.IAM_ROLE }}
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+      - uses: actions/checkout@v2
+      - name: initialize
+        uses: .github/workflows/ecr_login
       - id: filter
         uses: dorny/paths-filter@v2
         with:
