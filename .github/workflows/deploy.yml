@@ -20,16 +20,15 @@ jobs:
         with:
           aws-region: ${{ secrets.REGION }}
           role-to-assume: ${{ secrets.IAM_ROLE }}
-      - name: test
-        run: ls -l  
-      #- name: Login to Amazon ECR
-      #  id: login-ecr
-      #  uses: aws-actions/amazon-ecr-login@v1
-      #- name: Build, tag, and push image to Amazon ECR
-      #  env:
-      #    ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-      #    ECR_REPOSITORY: ${{ secrets.ECR_FRONT_REPO }}
-      #  run: |
-      #    IMAGE_TAG=$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
-      #    docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-      #    docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: push front container
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.ECR_FRONT_REPO }}
+        run: |
+          cd app/
+          IMAGE_TAG=$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
