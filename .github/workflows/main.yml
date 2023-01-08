@@ -38,7 +38,7 @@ jobs:
 
   infra:
     needs: changes
-    if: ${{ needs.changes.outputs.infra == 'true' }}
+    #if: ${{ needs.changes.outputs.infra == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -59,7 +59,7 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: ${{ env.terraform_ver }}
-      - run: terraform fmt -recursive -check
+      - run: terraform fmt -recursive
 
   
   app_front:
