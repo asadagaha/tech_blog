@@ -26,12 +26,12 @@ runs:
     - name: push container
       shell: bash
       env:
-        tag: ${{ inputs.tag }}
-        registory: ${{ steps.login.outputs.ecr-registry }}
-        repository: ${{ inputs.repository }}
-        dockerfile_dir: ${{ inputs.dockerfile_dir }}
+        TAG: ${{ inputs.tag }}
+        REGISTORY: ${{ steps.login.outputs.ecr-registry }}
+        REPOSITORY: ${{ inputs.repository }}
+        PATH: ${{ inputs.dockerfile_dir }}
       run: |
         cd app/
-        IMAGE_TAG=$(echo $tag | sed -e "s#refs/tags/##g")
-        docker build -t $registory/$repository:$IMAGE_TAG -f $dockerfile_dir .
-        docker push $registory/${{ inputs.repository }}:$IMAGE_TAG
+        IMAGE_TAG=$(echo $TAG | sed -e "s#refs/tags/##g")
+        docker build -t $REGISTORY/$REPOSITORY:$IMAGE_TAG -f $PATH .
+        docker push $REGISTORY/$REPOSITORY:$IMAGE_TAG
