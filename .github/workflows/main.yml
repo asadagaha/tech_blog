@@ -69,6 +69,5 @@ jobs:
         with:
           region: ${{ secrets.REGION }}
           iam_role: ${{ secrets.IAM_ROLE }}
-          tag: ${{ github.ref }}
           repository: ${{ secrets.ECR_BACK_REPO }}
           dockerfile_dir: app/containers/backend/Dockerfile
