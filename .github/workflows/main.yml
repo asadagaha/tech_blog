@@ -13,7 +13,6 @@ on:
 jobs:
   changes:
     runs-on: ubuntu-latest
-    needs: infra
     outputs:
       app_front: ${{ steps.filter.outputs.app_front }}
       app_back: ${{ steps.filter.outputs.app_back }}
