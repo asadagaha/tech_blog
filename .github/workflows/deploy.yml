@@ -8,7 +8,7 @@ on:
       - v*
 
 jobs:
-  pushImage:
+  pushImageToECR:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -27,8 +27,9 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_FRONT_REPO }}
+          DOCKERFILE_DIR: containers/frontend/Dockerfile
         run: |
           cd app/
           IMAGE_TAG=$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f $DOCKERFILE_DIR .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
