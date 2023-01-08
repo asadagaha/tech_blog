@@ -3,7 +3,6 @@ name: deploy
 on:
   push:
     paths:
-      - '.github/**'  
       - 'app/**'  
       - 'infra/**'  
     branches:
