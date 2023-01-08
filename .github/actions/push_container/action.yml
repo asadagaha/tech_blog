@@ -31,6 +31,7 @@ runs:
         REPOSITORY: ${{ inputs.repository }}
         PATH: ${{ inputs.dockerfile_dir }}
       run: |
+        sudo apt-get install -y sed
         cd app/
         IMAGE_TAG=$(echo $TAG | sed -e "s#refs/tags/##g")
         docker build -t $REGISTORY/$REPOSITORY:$IMAGE_TAG -f $PATH .
