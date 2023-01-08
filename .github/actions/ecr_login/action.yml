@@ -1,8 +1,9 @@
+name: "login to ecr"
 outputs:
   ecr-retistry:
     value: ${{ steps.login-ecr.outputs.registry }}
 runs:
-  using: "Composite"
+  using: "composite"
   steps:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1

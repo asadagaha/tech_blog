@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: initialize
-        uses: .github/actions/ecr_login
+        uses: ./.github/actions/ecr_login
       - id: filter
         uses: dorny/paths-filter@v2
         with:
