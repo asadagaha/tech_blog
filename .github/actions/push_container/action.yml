@@ -32,6 +32,6 @@ runs:
         PATH: ${{ inputs.dockerfile_dir }}
       run: |
         cd app/
-        IMAGE_TAG=$(echo $TAG | sed -e "s#refs/tags/##g")
+        IMAGE_TAG=$(echo ${TAG##*/} )
         docker build -t $REGISTORY/$REPOSITORY:$IMAGE_TAG -f $PATH .
         docker push $REGISTORY/$REPOSITORY:$IMAGE_TAG

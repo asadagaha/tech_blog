@@ -17,7 +17,7 @@ jobs:
       app_front: ${{ steps.filter.outputs.app_front }}
       app_back: ${{ steps.filter.outputs.app_back }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: dorny/paths-filter@v2
       id: filter
       with:
@@ -47,7 +47,7 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: push_container
         uses: ./.github/actions/push_container
         with:
