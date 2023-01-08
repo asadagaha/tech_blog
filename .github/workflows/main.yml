@@ -29,13 +29,13 @@ jobs:
             - 'app/react_frontend/**'
             - 'app/nginx/**'
           app_back:
-            - 'app/containers/frontend/**'
-            - 'app/react_frontend/**'
-            - 'app/nginx/**'
+            - 'app/containers/backend/**'
+            - 'app/rails/**'
 
   infra:
-    runs-on: ubuntu-latest
     needs: changes
+    if: ${{ needs.changes.outputs.infra == 'true' }}
+    runs-on: ubuntu-latest
     steps:
     - run: echo "do infra job" ## terraform deployに修正
   
@@ -56,3 +56,20 @@ jobs:
           tag: ${{ github.ref }}
           repository: ${{ secrets.ECR_FRONT_REPO }}
           dockerfile_dir: containers/frontend/Dockerfile
+  app_back:
+    needs: infra
+    if: ${{ needs.changes.outputs.app_back == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v2
+      - name: push_container
+        uses: ./.github/actions/push_container
+        with:
+          region: ${{ secrets.REGION }}
+          iam_role: ${{ secrets.IAM_ROLE }}
+          tag: ${{ github.ref }}
+          repository: ${{ secrets.ECR_BACK_REPO }}
+          dockerfile_dir: containers/backend/Dockerfile
