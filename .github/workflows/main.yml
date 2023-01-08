@@ -72,7 +72,7 @@ jobs:
         uses: ./.github/actions/push_container
         with:
           region: ${{ secrets.REGION }}
-          iam_role: ${{ env.iam_role_for_github_actions }}x
+          iam_role: ${{ env.app }}-github-actions-role-${{ env.env }}
           tag: ${{ github.ref }}
           repository: ${{ env.app }}-front-${{ env.env }}
           dockerfile_dir: ./app/containers/frontend/Dockerfile
@@ -89,6 +89,6 @@ jobs:
         uses: ./.github/actions/push_container
         with:
           region: ${{ secrets.REGION }}
-          iam_role: ${{ env.iam_role_for_github_actions }}
+          iam_role: ${{ env.app }}-github-actions-role-${{ env.env }}
           repository: ${{ env.app }}-back-${{ env.env }}
           dockerfile_dir: ./app/containers/backend/Dockerfile
