@@ -8,8 +8,7 @@ on:
       - 'infra/**'  
     branches:
       - main
-    tags:
-      - v*
+      
 jobs:
   changes:
     runs-on: ubuntu-latest
