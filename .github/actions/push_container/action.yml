@@ -23,14 +23,24 @@ runs:
     - name: Login to Amazon ECR
       id: login
       uses: aws-actions/amazon-ecr-login@v1
+      
     - name: push container
-      shell: sh
-      env:
-        IMAGE_TAG: latest
-        REGISTORY: ${{ steps.login.outputs.ecr-registry }}
-        REPOSITORY: ${{ inputs.repository }}
-        PATH: ${{ inputs.dockerfile_dir }}
-      run: |
-        cd app/
-        docker build -t $REGISTORY/$REPOSITORY:$IMAGE_TAG -f $PATH .
-        docker push $REGISTORY/$REPOSITORY:$IMAGE_TAG
+      uses: docker/build-push-action@v2
+      id: build-image
+      with:
+        push: true
+        file: ${{ inputs.dockerfile_dir }}
+        tags: ${{ steps.login.outputs.ecr-registry }}/${{ inputs.repository }}:latest
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+      #shell: sh
+      #env:
+      #  IMAGE_TAG: latest
+      #  REGISTORY: ${{ steps.login.outputs.ecr-registry }}
+      #  REPOSITORY: ${{ inputs.repository }}
+      #  PATH: 
+      #run: |
+      #  cd app/
+      #  docker build -t $REGISTORY/$REPOSITORY:$IMAGE_TAG -f $PATH .
+      #  docker push $REGISTORY/$REPOSITORY:$IMAGE_TAG
