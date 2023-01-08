@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: initialize
-        uses: .github/workflows/ecr_login
+        uses: .github/actions/ecr_login
       - id: filter
         uses: dorny/paths-filter@v2
         with:
@@ -42,7 +42,7 @@ jobs:
       - if: steps.filter.outputs.front == 'true'
         name: front
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REGISTRY: ${{ steps.initialize.outputs.ecr-retistry }}
           ECR_REPOSITORY: ${{ secrets.ECR_FRONT_REPO }}
           DOCKERFILE_DIR: containers/frontend/Dockerfile
         run: |
