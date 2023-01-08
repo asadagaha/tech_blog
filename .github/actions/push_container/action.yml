@@ -23,7 +23,6 @@ runs:
     - name: Login to Amazon ECR
       id: login
       uses: aws-actions/amazon-ecr-login@v1
-    - run: cd ./app
     - name: push container
       uses: docker/build-push-action@v2
       id: build-image
@@ -31,7 +30,7 @@ runs:
         push: true
         file: ${{ inputs.dockerfile_dir }}
         tags: ${{ steps.login.outputs.registry }}/${{ inputs.repository }}:latest
-
+        context: ./app
       #shell: sh
       #env:
       #  IMAGE_TAG: latest
