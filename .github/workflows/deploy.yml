@@ -20,6 +20,7 @@ jobs:
         with:
           aws-region: ${{ secrets.REGION }}
           role-to-assume: ${{ secrets.IAM_ROLE }}
+      - name: test
         run: ls -l  
       #- name: Login to Amazon ECR
       #  id: login-ecr
