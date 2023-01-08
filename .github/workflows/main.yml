@@ -59,7 +59,7 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: ${{ env.terraform_ver }}
-      - run: terraform init
+      - run: terraform init ###
 
   
   app_front:
