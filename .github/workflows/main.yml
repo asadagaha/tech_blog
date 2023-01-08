@@ -21,20 +21,20 @@ jobs:
       app_front: ${{ steps.filter.outputs.app_front }}
       app_back: ${{ steps.filter.outputs.app_back }}
     steps:
-    - uses: actions/checkout@v3
-    - uses: dorny/paths-filter@v2
-      id: filter
-      with:
-        filters: |
-          infra:
-            - 'infra/**'
-          app_front:
-            - 'app/containers/frontend/**'
-            - 'app/react_frontend/**'
-            - 'app/nginx/**'
-          app_back:
-            - 'app/containers/backend/**'
-            - 'app/rails/**'
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            infra:
+              - 'infra/**'
+            app_front:
+              - 'app/containers/frontend/**'
+              - 'app/react_frontend/**'
+              - 'app/nginx/**'
+            app_back:
+              - 'app/containers/backend/**'
+              - 'app/rails/**'
 
   infra:
     needs: changes
@@ -44,18 +44,18 @@ jobs:
       run:
         shell: bash
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-region: ${{ secrets.REGION }}
-        role-to-assume: ${{ secrets.IAM_ROLE }}
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-      with:
-        terraform_version: ${{ env.terraform_ver }}
-    - run: terraform fmt -recursive -check
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ secrets.REGION }}
+          role-to-assume: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.app }}-github-actions-role-${{ env.env }}
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ env.terraform_ver }}
+      - run: terraform fmt -recursive -check
 
   
   app_front:
@@ -71,7 +71,7 @@ jobs:
         uses: ./.github/actions/push_container
         with:
           region: ${{ secrets.REGION }}
-          iam_role: ${{ env.app }}-github-actions-role-${{ env.env }}
+          iam_role: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.app }}-github-actions-role-${{ env.env }}
           tag: ${{ github.ref }}
           repository: ${{ env.app }}-front-${{ env.env }}
           dockerfile_dir: ./app/containers/frontend/Dockerfile
@@ -88,6 +88,6 @@ jobs:
         uses: ./.github/actions/push_container
         with:
           region: ${{ secrets.REGION }}
-          iam_role: ${{ env.app }}-github-actions-role-${{ env.env }}
+          iam_role: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.app }}-github-actions-role-${{ env.env }}
           repository: ${{ env.app }}-back-${{ env.env }}
           dockerfile_dir: ./app/containers/backend/Dockerfile

@@ -6,7 +6,7 @@ import BlogPosts from "./Blogposts";
 
 
 const client:any = new ApolloClient({
-  uri: `http://localhost:3000/graphql`,  //変数化をしたい###
+  uri: `http://localhost:3000/graphql`,  //変数化をしたい#
   cache: new InMemoryCache()
 })
 
