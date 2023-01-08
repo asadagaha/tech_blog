@@ -40,6 +40,9 @@ jobs:
     needs: changes
     if: ${{ needs.changes.outputs.infra == 'true' }}
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     defaults:
       run:
         shell: bash
