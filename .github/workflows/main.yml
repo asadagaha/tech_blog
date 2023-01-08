@@ -9,14 +9,16 @@ on:
       - main
 env:
   terraform_ver: 1.3.6
-  ecr_front_repo: workout-front-staging
-  ecr_back_repo: workout-back-staging
+  app: workout
+  env: staging
+  iam_role_for_github_actions: ${{ env.app }}-github-actions-role-${{ env.env }}
 
 
 jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
+      infra: ${{ steps.filter.outputs.infra }}
       app_front: ${{ steps.filter.outputs.app_front }}
       app_back: ${{ steps.filter.outputs.app_back }}
     steps:
@@ -70,9 +72,9 @@ jobs:
         uses: ./.github/actions/push_container
         with:
           region: ${{ secrets.REGION }}
-          iam_role: ${{ secrets.IAM_ROLE }}
+          iam_role: ${{ env.iam_role_for_github_actions }}x
           tag: ${{ github.ref }}
-          repository: ${{ env.ecr_front_repo }}
+          repository: ${{ env.app }}-front-${{ env.env }}
           dockerfile_dir: ./app/containers/frontend/Dockerfile
   app_back:
     needs: changes
@@ -87,6 +89,6 @@ jobs:
         uses: ./.github/actions/push_container
         with:
           region: ${{ secrets.REGION }}
-          iam_role: ${{ secrets.IAM_ROLE }}
-          repository: ${{ env.ecr_back_repo }}
+          iam_role: ${{ env.iam_role_for_github_actions }}
+          repository: ${{ env.app }}-back-${{ env.env }}
           dockerfile_dir: ./app/containers/backend/Dockerfile
