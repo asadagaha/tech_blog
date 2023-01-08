@@ -24,14 +24,13 @@ runs:
       id: login
       uses: aws-actions/amazon-ecr-login@v1
     - name: push container
-      shell: bash
+      shell: sh
       env:
         TAG: ${{ inputs.tag }}
         REGISTORY: ${{ steps.login.outputs.ecr-registry }}
         REPOSITORY: ${{ inputs.repository }}
         PATH: ${{ inputs.dockerfile_dir }}
       run: |
-        apt install -y sed
         cd app/
         IMAGE_TAG=$(echo $TAG | sed -e "s#refs/tags/##g")
         docker build -t $REGISTORY/$REPOSITORY:$IMAGE_TAG -f $PATH .
