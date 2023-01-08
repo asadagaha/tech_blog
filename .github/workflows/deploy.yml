@@ -47,6 +47,7 @@ jobs:
       - name: push to ECR
         run: cd app/
       - if: steps.filter.outputs.front == 'true'
+        name: front
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_FRONT_REPO }}
