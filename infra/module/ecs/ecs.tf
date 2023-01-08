@@ -24,12 +24,11 @@ resource "aws_ecs_task_definition" "main" {
   network_mode             = "awsvpc"
   execution_role_arn       = var.ecs_task_execution_role_arn
   task_role_arn            = var.ecs_task_execution_role_arn
-  container_definitions = jsonencode([
+  container_definitions = jsonencode([ #外部ファイルに外だししたい
     {
-      "name" : var.web_container_name
-      "image" : "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.web_container_name}"
-      "name" : "${var.app}-${var.web_container_name}",
-      "image" : "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.app}-${var.web_container_name}",
+      "name" : "${var.app}-front-${var.env}"
+      "image" : "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.app}-front-${var.env}"
+      "name" : "${var.app}-front-${var.env}",
       "essential" : true
       "portMappings" : [
         {
@@ -66,7 +65,7 @@ resource "aws_ecs_service" "main" {
 
   load_balancer {
     target_group_arn = var.target_group_arn
-    container_name   = "${var.app}-${var.web_container_name}"
+    container_name   = "${var.app}-front-${var.env}"
     container_port   = "80"
   }
 }

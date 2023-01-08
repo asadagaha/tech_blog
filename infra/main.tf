@@ -43,7 +43,6 @@ module "ecr" {
   source             = "./module/ecr"
   app                = var.app
   env                = var.env
-  web_container_name = var.web_container_name
 }
 module "ecs" {
   source                       = "./module/ecs"
@@ -54,7 +53,6 @@ module "ecs" {
   vpc_id                       = module.vpc.vpc_id
   target_group_arn             = module.elb.target_group_arn
   subnet_ids                   = [module.vpc.subned_public_1a_id, module.vpc.subned_public_1c_id]
-  web_container_name           = var.web_container_name
   ecs_sg_id                    = module.security_group.ecs_sg_id
   ecs_task_execution_role_arn  = module.iam.ecs_task_execution_role_arn
   cloudwatch_log_group_for_ecs = module.cloudwatch.cloudwatch_log_group_for_ecs
