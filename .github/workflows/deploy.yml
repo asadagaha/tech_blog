@@ -44,6 +44,7 @@ jobs:
               - 'app/nginx/**'
             db:
               - 'app/containers/db/**'
+      - name: push to ECR
         run: cd app/
       - if: steps.filter.outputs.front == 'true'
         env:
