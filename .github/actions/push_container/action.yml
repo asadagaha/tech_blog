@@ -1,5 +1,10 @@
 name: "push contaienr to ecr"
+
 inputs:
+  region:
+    required: true
+  iam_role:
+    required: true
   tag:
     required: true
   registory:
@@ -12,9 +17,17 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: ${{ inputs.region }}
+        role-to-assume: ${{ inputs.iam_role }}
+    - name: Login to Amazon ECR
+      id: login
+      uses: aws-actions/amazon-ecr-login@v1
     - name: push container
       run: |
         cd app/
         IMAGE_TAG=$(echo ${{ inputs.tag }} | sed -e "s#refs/tags/##g")
-        docker build -t ${{ inputs.registory }}/${{ inputs.repository }}:$IMAGE_TAG -f ${{ inputs.dockerfile_dir }} .
+        docker build -t ${{ steps.login.outputs.ecr-registry }}/${{ inputs.repository }}:$IMAGE_TAG -f ${{ inputs.dockerfile_dir }} .
         docker push ${{ inputs.registory }}/${{ inputs.repository }}:$IMAGE_TAG

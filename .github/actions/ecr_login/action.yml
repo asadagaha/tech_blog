@@ -1,6 +1,6 @@
 name: "login to ecr"
 inputs:
-  region:
+  ecr_registory:
     required: true
   iam_role:
     required: true
