@@ -31,8 +31,8 @@ runs:
         push: true
         file: ${{ inputs.dockerfile_dir }}
         tags: ${{ steps.login.outputs.ecr-registry }}/${{ inputs.repository }}:latest
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
       #shell: sh
       #env:
