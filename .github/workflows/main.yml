@@ -72,7 +72,6 @@ jobs:
         with:
           region: ${{ secrets.REGION }}
           iam_role: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.app }}-github-actions-role-${{ env.env }}
-          tag: ${{ github.ref }}
           repository: ${{ env.app }}-front-${{ env.env }}
           dockerfile_dir: ./app/containers/frontend/Dockerfile
   app_back:
