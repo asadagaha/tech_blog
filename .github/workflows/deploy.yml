@@ -16,6 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: dorny/paths-filter@v2
+      -  uses: aws-actions/amazon-ecr-login@v1
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -23,7 +24,6 @@ jobs:
           role-to-assume: ${{ secrets.IAM_ROLE }}
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
       - name: push front container
         id: changes
         with:
