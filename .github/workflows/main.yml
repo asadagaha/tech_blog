@@ -60,7 +60,7 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VER }}
       - run: terraform fmt -recursive -check
-      - run: > 
+      - run: >-
         terraform init 
         -backend-config="bucket=${{ secrets.TF_BUCKET }}" 
         -backend-config="key=${{ env.APP }}/${{ env.ENV }}/terraform.tfstate" 
