@@ -33,12 +33,18 @@ runs:
       uses: hashicorp/setup-terraform@v1
       with:
         terraform_version: ${{ inputs.tf_ver }}
-    - run: terraform fmt -recursive -check
-    - run: >
+    - shell: bash
+      run: terraform fmt -recursive -check
+    - shell: bash
+      run: >
         terraform init 
         -backend-config="bucket=${{inputs.tf_bucket}}"
         -backend-config="key=${{ inputs.app }}/${{ inputs.env }}/terraform.tfstate"
         -backend-config="region=${{ inputs.region }}"
-    - run: terraform plan
+    - shell: bash
+      run: ls -la infra/
+
+    #- shell: bash
+    #  run: terraform plan
 
     
