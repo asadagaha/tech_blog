@@ -42,7 +42,8 @@ runs:
         -backend-config="bucket=${{inputs.tf_bucket}}"
         -backend-config="key=${{ inputs.app }}/${{ inputs.env }}/terraform.tfstate"
         -backend-config="region=${{ inputs.region }}"
-    - run: echo "${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}"
+    - shell: bash
+      run: echo "${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}"
     #- shell: bash
     #  env:
     #    TF_VAR_app: ${{ inputs.app }}
