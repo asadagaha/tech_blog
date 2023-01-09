@@ -37,6 +37,7 @@ runs:
     - shell: bash
       run: terraform fmt -recursive -check
     - shell: bash
+      working-directory: ./infra
       run: >
         terraform init 
         -backend-config="bucket=${{inputs.tf_bucket}}"
