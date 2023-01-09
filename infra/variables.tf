@@ -4,6 +4,9 @@ variable "region" {}
 variable "acm_arn" {}
 variable "cognito_admin_user_email" {}
 variable "github_repository" {}
+variable "db_username" {}
+variable "db_password" {}
+variable "db_engine_version" {}
 
 data "aws_caller_identity" "self" {}
 locals {
