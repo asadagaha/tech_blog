@@ -13,6 +13,12 @@ inputs:
     required: true
   tf_bucket:
     required: true
+defaults:
+  run:
+    shell: bash
+    working-directory: infra
+
+
 
 
 runs:

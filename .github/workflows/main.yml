@@ -44,10 +44,6 @@ jobs:
     needs: changes
     if: ${{ needs.changes.outputs.infra == 'true' }}
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: infra
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -57,9 +53,7 @@ jobs:
           app: ${{ env.APP }}
           env: ${{ env.ENV }}
           region: ${{ secrets.REGION }}
-          iam_role: >
-            arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/
-            ${{ env.APP }}-github-actions-role-${{ env.ENV }}
+          iam_role: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.APP }}-github-actions-role-${{ env.ENV }}
           tf_ver: ${{ env.TF_VER }}
           tf_bucket: ${{secrets.TF_BUCKET}}
 
@@ -94,9 +88,7 @@ jobs:
         uses: ./.github/actions/push_container
         with:
           region: ${{ secrets.REGION }}
-          iam_role: >
-            arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/
-            ${{ env.APP }}-github-actions-role-${{ env.ENV }}
+          iam_role: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.APP }}-github-actions-role-${{ env.ENV }}
           repository: ${{ env.APP }}-front-${{ env.ENV }}
           dockerfile_dir: ./app/containers/frontend/Dockerfile
   app_back:
@@ -109,8 +101,6 @@ jobs:
         uses: ./.github/actions/push_container
         with:
           region: ${{ secrets.REGION }}
-          iam_role: >
-            arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/
-            ${{ env.APP }}-github-actions-role-${{ env.ENV }}
+          iam_role: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.APP }}-github-actions-role-${{ env.ENV }}
           repository: ${{ env.APP }}-back-${{ env.ENV }}
           dockerfile_dir: ./app/containers/backend/Dockerfile
