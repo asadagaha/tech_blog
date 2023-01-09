@@ -57,7 +57,7 @@ jobs:
           tf_bucket: ${{secrets.TF_BUCKET}}
           acm_arn: ${{secrets.ACM_ARN}}
           cognito_admin_user_email:  ${{secrets.COGNITO_ADMIN_USER_EMAIL}}
-          eb_engine_version: ${{env.DB_ENGINE_VERSION}}
+          db_engine_version: ${{env.DB_ENGINE_VERSION}}
           db_username: ${{secrets.DB_USERNAME}}
           db_password: ${{secrets.DB_PASSWORD}}
   app_front:
