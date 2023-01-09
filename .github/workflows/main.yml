@@ -15,8 +15,6 @@ permissions:
   id-token: write
   contents: read
 
-
-
 jobs:
   changes:
     runs-on: ubuntu-latest
@@ -39,7 +37,6 @@ jobs:
             app_back:
               - 'app/containers/backend/**'
               - 'app/rails/**'
-
   infra:
     needs: changes
     if: ${{ needs.changes.outputs.infra == 'true' }}
@@ -56,28 +53,8 @@ jobs:
           iam_role: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.APP }}-github-actions-role-${{ env.ENV }}
           tf_ver: ${{ env.TF_VER }}
           tf_bucket: ${{secrets.TF_BUCKET}}
-
-
-      #- name: Configure AWS Credentials
-      #  uses: aws-actions/configure-aws-credentials@v1
-      #  with:
-      #    aws-region: ${{ secrets.REGION }}
-      #    role-to-assume: >
-      #      arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/
-      #      ${{ env.APP }}-github-actions-role-${{ env.ENV }}
-      #- name: Setup Terraform
-      #  uses: hashicorp/setup-terraform@v1
-      #  with:
-      #    terraform_version: ${{ env.TF_VER }}
-      #- run: terraform fmt -recursive -check
-      #- run: >
-      #    terraform init 
-      #    -backend-config="bucket=${{secrets.TF_BUCKET}}"
-      #    -backend-config="key=${{ env.APP }}/${{ env.ENV }}/terraform.tfstate"
-      #    -backend-config="region=${{secrets.REGION}}"
-      #- run: terraform plan
-
-  
+          acm_arn: ${{ secrets.ACM_ARN }}
+          cognito_admin_user_email:  ${{ secrets.COGNITO_ADMIN_USER_EMAIL }}
   app_front:
     needs: changes
     if: ${{ needs.changes.outputs.app_front == 'true' }}
