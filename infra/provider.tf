@@ -1,4 +1,4 @@
-provider "aws" {   ####
+provider "aws" { #######
   region = var.region
   default_tags {
     tags = {
@@ -12,7 +12,7 @@ provider "aws" {   ####
 terraform {
   required_version = "1.3.6"
 
-   backend "s3" {} 
+  backend "s3" {}
 
   required_providers {
     aws = {

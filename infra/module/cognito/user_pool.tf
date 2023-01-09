@@ -1,5 +1,5 @@
 resource "aws_cognito_user_pool" "main" {
-  name = "${var.app}-auth-${var.env}"
+  name                     = "${var.app}-auth-${var.env}"
   auto_verified_attributes = ["email"]
   password_policy {
     minimum_length                   = 6

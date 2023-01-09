@@ -6,9 +6,9 @@ module "vpc" {
   vpc_endpoint_sg_id = module.security_group.vpc_endpoint_sg_id
 }
 module "iam" {
-  source        = "./module/iam"
-  app           = var.app
-  env           = var.env
+  source            = "./module/iam"
+  app               = var.app
+  env               = var.env
   github_repository = var.github_repository
 }
 module "security_group" {
@@ -40,9 +40,9 @@ module "elb" {
   acm_arn    = var.acm_arn
 }
 module "ecr" {
-  source             = "./module/ecr"
-  app                = var.app
-  env                = var.env
+  source = "./module/ecr"
+  app    = var.app
+  env    = var.env
 }
 module "ecs" {
   source                       = "./module/ecs"
