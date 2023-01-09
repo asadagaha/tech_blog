@@ -59,7 +59,7 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: ${{ env.TF_VER }}
-      - run: terraform fmt -recursive 
+      - run: terraform fmt -recursive -check
 
   
   app_front:
