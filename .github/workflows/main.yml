@@ -8,9 +8,9 @@ on:
     branches:
       - main
 env:
-  terraform_ver: 1.3.6
-  app: workout
-  env: staging
+  TF_VER: 1.3.6
+  APP: workout
+  ENV: staging
 
 
 jobs:
@@ -54,12 +54,12 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: ${{ secrets.REGION }}
-          role-to-assume: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.app }}-github-actions-role-${{ env.env }}
+          role-to-assume: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.APP }}-github-actions-role-${{ env.ENV }}
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: ${{ env.terraform_ver }}
-      - run: terraform init ###
+          terraform_version: ${{ env.TF_VER }}
+      - run: terraform fmt --recursice ###
 
   
   app_front:
@@ -75,8 +75,8 @@ jobs:
         uses: ./.github/actions/push_container
         with:
           region: ${{ secrets.REGION }}
-          iam_role: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.app }}-github-actions-role-${{ env.env }}
-          repository: ${{ env.app }}-front-${{ env.env }}
+          iam_role: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.APP }}-github-actions-role-${{ env.ENV }}
+          repository: ${{ env.APP }}-front-${{ env.ENV }}
           dockerfile_dir: ./app/containers/frontend/Dockerfile
   app_back:
     needs: changes
@@ -91,6 +91,6 @@ jobs:
         uses: ./.github/actions/push_container
         with:
           region: ${{ secrets.REGION }}
-          iam_role: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.app }}-github-actions-role-${{ env.env }}
-          repository: ${{ env.app }}-back-${{ env.env }}
+          iam_role: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.APP }}-github-actions-role-${{ env.ENV }}
+          repository: ${{ env.APP }}-back-${{ env.ENV }}
           dockerfile_dir: ./app/containers/backend/Dockerfile
