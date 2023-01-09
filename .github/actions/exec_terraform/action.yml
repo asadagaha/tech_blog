@@ -28,32 +28,30 @@ runs:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-region: ${{ inputs.region }}
-        role-to-assume: ${{ inputs.iam_role }}
+        aws-region: ${{inputs.region}}
+        role-to-assume: ${{inputs.iam_role}}
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
       with:
-        terraform_version: ${{ inputs.tf_ver }}
+        terraform_version: ${{inputs.tf_ver}}
     - shell: bash
       run: terraform fmt -recursive -check
     - shell: bash
       run: >
         terraform init 
         -backend-config="bucket=${{inputs.tf_bucket}}"
-        -backend-config="key=${{ inputs.app }}/${{ inputs.env }}/terraform.tfstate"
-        -backend-config="region=${{ inputs.region }}"
+        -backend-config="key=${{inputs.app}}/${{inputs.env}}/terraform.tfstate"
+        -backend-config="region=${{inputs.region}}"
     - shell: bash
-      run: echo "${GITHUB_REPOSITORY}/}"
-    #- shell: bash
-    #  env:
-    #    TF_VAR_app: ${{ inputs.app }}
-    #    TF_VAR_env: ${{ inputs.env }}
-    #    TF_VAR_region: ${{ inputs.region }}
-    #    TF_VAR_acm_arn: ${{ inputs.acm_arn }}
-    #    TF_VAR_cognito_admin_user_email: ${{ inputs.cognito_admin_user_email }}
-    #    TF_VAR_github_repository: ${{ inputs.region }}
-    #  run: >
-    #    terraform plan
+      env:
+        TF_VAR_app: ${{inputs.app}}
+        TF_VAR_env: ${{inputs.env}}
+        TF_VAR_region: ${{inputs.region}}
+        TF_VAR_acm_arn: ${{inputs.acm_arn}}
+        TF_VAR_cognito_admin_user_email: ${{inputs.cognito_admin_user_email}}
+        TF_VAR_github_repository: ${{github.repository}}
+      run: >
+        terraform plan
 
 
     

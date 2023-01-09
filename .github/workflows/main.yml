@@ -19,9 +19,9 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      infra: ${{ steps.filter.outputs.infra }}
-      app_front: ${{ steps.filter.outputs.app_front }}
-      app_back: ${{ steps.filter.outputs.app_back }}
+      infra: ${{steps.filter.outputs.infra}}
+      app_front: ${{steps.filter.outputs.app_front}}
+      app_back: ${{steps.filter.outputs.app_back}}
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
@@ -39,7 +39,7 @@ jobs:
               - 'app/rails/**'
   infra:
     needs: changes
-    if: ${{ needs.changes.outputs.infra == 'true' }}
+    if: ${{needs.changes.outputs.infra == 'true'}}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -47,37 +47,37 @@ jobs:
       - name: exec_terraform
         uses: ./.github/actions/exec_terraform
         with:
-          app: ${{ env.APP }}
-          env: ${{ env.ENV }}
-          region: ${{ secrets.REGION }}
-          iam_role: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.APP }}-github-actions-role-${{ env.ENV }}
-          tf_ver: ${{ env.TF_VER }}
+          app: ${{env.APP}}
+          env: ${{env.ENV}}
+          region: ${{secrets.REGION}}
+          iam_role: arn:aws:iam::${{secrets.ACCOUNT_ID}}:role/${{env.APP}}-github-actions-role-${{env.ENV}}
+          tf_ver: ${{env.TF_VER}}
           tf_bucket: ${{secrets.TF_BUCKET}}
-          acm_arn: ${{ secrets.ACM_ARN }}
-          cognito_admin_user_email:  ${{ secrets.COGNITO_ADMIN_USER_EMAIL }}
+          acm_arn: ${{secrets.ACM_ARN}}
+          cognito_admin_user_email:  ${{secrets.COGNITO_ADMIN_USER_EMAIL}}
   app_front:
     needs: changes
-    if: ${{ needs.changes.outputs.app_front == 'true' }}
+    if: ${{needs.changes.outputs.app_front == 'true'}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: push_container
         uses: ./.github/actions/push_container
         with:
-          region: ${{ secrets.REGION }}
-          iam_role: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.APP }}-github-actions-role-${{ env.ENV }}
-          repository: ${{ env.APP }}-front-${{ env.ENV }}
+          region: ${{secrets.REGION}}
+          iam_role: arn:aws:iam::${{secrets.ACCOUNT_ID}}:role/${{env.APP}}-github-actions-role-${{env.ENV}}
+          repository: ${{env.APP}}-front-${{env.ENV}}
           dockerfile_dir: ./app/containers/frontend/Dockerfile
   app_back:
     needs: changes
-    if: ${{ needs.changes.outputs.app_back == 'true' }}
+    if: ${{needs.changes.outputs.app_back == 'true'}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: push_container
         uses: ./.github/actions/push_container
         with:
-          region: ${{ secrets.REGION }}
-          iam_role: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.APP }}-github-actions-role-${{ env.ENV }}
-          repository: ${{ env.APP }}-back-${{ env.ENV }}
+          region: ${{secrets.REGION}}
+          iam_role: arn:aws:iam::${{secrets.ACCOUNT_ID}}:role/${{env.APP}}-github-actions-role-${{env.ENV}}
+          repository: ${{env.APP}}-back-${{env.ENV}}
           dockerfile_dir: ./app/containers/backend/Dockerfile

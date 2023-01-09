@@ -16,8 +16,8 @@ runs:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-region: ${{ inputs.region }}
-        role-to-assume: ${{ inputs.iam_role }}
+        aws-region: ${{inputs.region}}
+        role-to-assume: ${{inputs.iam_role}}
     - name: Login to Amazon ECR
       id: login
       uses: aws-actions/amazon-ecr-login@v1
@@ -26,6 +26,6 @@ runs:
       id: build-image
       with:
         push: true
-        file: ${{ inputs.dockerfile_dir }}
-        tags: ${{ steps.login.outputs.registry }}/${{ inputs.repository }}:latest
+        file: ${{inputs.dockerfile_dir}}
+        tags: ${{steps.login.outputs.registry}}/${{inputs.repository}}:latest
         context: ./app
