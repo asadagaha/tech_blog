@@ -38,7 +38,7 @@ jobs:
 
   infra:
     needs: changes
-    #if: ${{ needs.changes.outputs.infra == 'true' }}
+    if: ${{ needs.changes.outputs.infra == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -60,6 +60,7 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VER }}
       - run: terraform fmt -recursive -check
+      - run: terraform plan
 
   
   app_front:
