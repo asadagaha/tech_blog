@@ -1,4 +1,4 @@
-name: "push contaienr to ecr"
+name: "execute terraform commdands"
 
 inputs:
   app:
@@ -40,6 +40,7 @@ runs:
         -backend-config="region=${{inputs.region}}"
     - name: format check
       shell: bash
+      working-directory: ./infra
       run: terraform fmt -recursive -check
     - name: validate check
       shell: bash
