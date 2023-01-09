@@ -17,10 +17,6 @@ inputs:
     required: true
   cognito_admin_user_email:
     required: true
-defaults:
-  run:
-    shell: bash
-    working-directory: infra
 
 runs:
   using: "composite"
