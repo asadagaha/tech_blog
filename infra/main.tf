@@ -44,14 +44,15 @@ module "ecr" {
   env    = var.env
 }
 module "rds" {
-  source         = "./module/rds"
-  app            = var.app
-  env            = var.env
-  username       = var.db_username
-  password       = var.db_password
-  subnet_ids     = [module.vpc.subned_private_1a_id, module.vpc.subned_private_1c_id]
-  rds_sg_id      = module.security_group.rds_sg_id
-  engine_version = var.db_engine_version
+  source          = "./module/rds"
+  app             = var.app
+  env             = var.env
+  username        = var.db_username
+  password        = var.db_password
+  subnet_ids      = [module.vpc.subned_private_1a_id, module.vpc.subned_private_1c_id]
+  rds_sg_id       = module.security_group.rds_sg_id
+  engine_version  = var.db_engine_version
+  monitoring_role = module.iam.rds_monitoring_role_arn
 
 }
 
