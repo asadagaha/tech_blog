@@ -11,6 +11,10 @@ env:
   TF_VER: 1.3.6
   APP: workout
   ENV: staging
+permissions:
+  id-token: write
+  contents: read
+
 
 
 jobs:
@@ -40,9 +44,6 @@ jobs:
     needs: changes
     if: ${{ needs.changes.outputs.infra == 'true' }}
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
     defaults:
       run:
         shell: bash
@@ -50,58 +51,66 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: exec_terraform
+        uses: ./.github/actions/exec_terraform
         with:
-          aws-region: ${{ secrets.REGION }}
-          role-to-assume: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.APP }}-github-actions-role-${{ env.ENV }}
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: ${{ env.TF_VER }}
-      - run: terraform fmt -recursive -check
-      - env:
-          TF_BUCKET: ${{secrets.TF_BUCKET}}
-          REGION: ${{ secrets.REGION }}
-          APP: ${{ env.APP }}
-          ENV: ${{ env.ENV }}
-        run: >
-          terraform init 
-          -backend-config="bucket=${{secrets.TF_BUCKET}}"
-          -backend-config="key=${{ env.APP }}/${{ env.ENV }}/terraform.tfstate"
-          -backend-config="region=${{secrets.REGION}}"
-      - run: terraform plan
+          app: ${{ env.APP }}
+          env: ${{ env.ENV }}
+          region: ${{ secrets.REGION }}
+          iam_role: >
+            arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/
+            ${{ env.APP }}-github-actions-role-${{ env.ENV }}
+          tf_ver: ${{ env.TF_VER }}
+          tf_bucket: ${{secrets.TF_BUCKET}}
+
+
+      #- name: Configure AWS Credentials
+      #  uses: aws-actions/configure-aws-credentials@v1
+      #  with:
+      #    aws-region: ${{ secrets.REGION }}
+      #    role-to-assume: >
+      #      arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/
+      #      ${{ env.APP }}-github-actions-role-${{ env.ENV }}
+      #- name: Setup Terraform
+      #  uses: hashicorp/setup-terraform@v1
+      #  with:
+      #    terraform_version: ${{ env.TF_VER }}
+      #- run: terraform fmt -recursive -check
+      #- run: >
+      #    terraform init 
+      #    -backend-config="bucket=${{secrets.TF_BUCKET}}"
+      #    -backend-config="key=${{ env.APP }}/${{ env.ENV }}/terraform.tfstate"
+      #    -backend-config="region=${{secrets.REGION}}"
+      #- run: terraform plan
 
   
   app_front:
     needs: changes
     if: ${{ needs.changes.outputs.app_front == 'true' }}
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
     steps:
       - uses: actions/checkout@v3
       - name: push_container
         uses: ./.github/actions/push_container
         with:
           region: ${{ secrets.REGION }}
-          iam_role: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.APP }}-github-actions-role-${{ env.ENV }}
+          iam_role: >
+            arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/
+            ${{ env.APP }}-github-actions-role-${{ env.ENV }}
           repository: ${{ env.APP }}-front-${{ env.ENV }}
           dockerfile_dir: ./app/containers/frontend/Dockerfile
   app_back:
     needs: changes
     if: ${{ needs.changes.outputs.app_back == 'true' }}
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
     steps:
       - uses: actions/checkout@v3
       - name: push_container
         uses: ./.github/actions/push_container
         with:
           region: ${{ secrets.REGION }}
-          iam_role: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/${{ env.APP }}-github-actions-role-${{ env.ENV }}
+          iam_role: >
+            arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/
+            ${{ env.APP }}-github-actions-role-${{ env.ENV }}
           repository: ${{ env.APP }}-back-${{ env.ENV }}
           dockerfile_dir: ./app/containers/backend/Dockerfile

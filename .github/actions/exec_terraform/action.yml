@@ -1,0 +1,38 @@
+name: "push contaienr to ecr"
+
+inputs:
+  app:
+    required: true
+  env:
+    required: true
+  region:
+    required: true
+  iam_role:
+    required: true
+  tf_ver:
+    required: true
+  tf_bucket:
+    required: true
+
+
+runs:
+  using: "composite"
+  steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: ${{ inputs.region }}
+        role-to-assume: ${{ inputs.iam_role }}
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: ${{ inputs.tf_ver }}
+    - run: terraform fmt -recursive -check
+    - run: >
+        terraform init 
+        -backend-config="bucket=${{inputs.tf_bucket}}"
+        -backend-config="key=${{ inputs.app }}/${{ inputs.env }}/terraform.tfstate"
+        -backend-config="region=${{ inputs.region }}"
+    - run: terraform plan
+
+    
