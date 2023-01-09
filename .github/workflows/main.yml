@@ -66,11 +66,11 @@ jobs:
           APP: ${{ env.APP }
           ENV: ${{ env.ENV }}
         run: |
-        bucket = "$TF_BUCKET" >> tfbackend.txt
-        key    = "$APP/$ENV/terraform.tfstate" >> tfbackend.txt
-        region = "$REGION" >> tfbackend.txt
-        cat tfbackend.txt
-        terraform init -backend-config="./tfbackend.txt"
+          bucket = "$TF_BUCKET" >> tfbackend.txt
+          key    = "$APP/$ENV/terraform.tfstate" >> tfbackend.txt
+          region = "$REGION" >> tfbackend.txt
+          cat tfbackend.txt
+          terraform init -backend-config="./tfbackend.txt"
       - run: terraform plan
 
   
