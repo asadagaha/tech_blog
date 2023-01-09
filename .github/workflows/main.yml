@@ -8,9 +8,11 @@ on:
     branches:
       - main
 env:
-  TF_VER: 1.3.6
   APP: workout
   ENV: staging
+  TF_VER: 1.3.6
+  DB_ENGINE_VERSION: 13.6
+
 permissions:
   id-token: write
   contents: read
@@ -55,6 +57,9 @@ jobs:
           tf_bucket: ${{secrets.TF_BUCKET}}
           acm_arn: ${{secrets.ACM_ARN}}
           cognito_admin_user_email:  ${{secrets.COGNITO_ADMIN_USER_EMAIL}}
+          eb_engine_version: ${{env.DB_ENGINE_VERSION}}
+          db_username: ${{secrets.DB_USERNAME}}
+          db_password: ${{secrets.DB_PASSWORD}}
   app_front:
     needs: changes
     if: ${{needs.changes.outputs.app_front == 'true'}}

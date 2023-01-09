@@ -1,4 +1,4 @@
-name: "push contaienr to ecr"
+name: "execute terraform commdands"
 
 inputs:
   app:
@@ -17,10 +17,10 @@ inputs:
     required: true
   cognito_admin_user_email:
     required: true
-defaults:
-  run:
-    shell: bash
-    working-directory: infra
+  db_username:
+    required: true
+  db_password:
+    required: true
 
 runs:
   using: "composite"
@@ -34,16 +34,24 @@ runs:
       uses: hashicorp/setup-terraform@v1
       with:
         terraform_version: ${{inputs.tf_ver}}
-    - shell: bash
-      run: terraform fmt -recursive -check
-    - shell: bash
+    - name: init
+      shell: bash
       working-directory: ./infra
       run: >
         terraform init 
         -backend-config="bucket=${{inputs.tf_bucket}}"
         -backend-config="key=${{inputs.app}}/${{inputs.env}}/terraform.tfstate"
         -backend-config="region=${{inputs.region}}"
-    - shell: bash
+    - name: format check
+      shell: bash
+      working-directory: ./infra
+      run: terraform fmt -recursive -check
+    - name: validate check
+      shell: bash
+      working-directory: ./infra
+      run: terraform validate
+    - name: deploy
+      shell: bash
       working-directory: ./infra
       env:
         TF_VAR_app: ${{inputs.app}}
@@ -51,9 +59,9 @@ runs:
         TF_VAR_region: ${{inputs.region}}
         TF_VAR_acm_arn: ${{inputs.acm_arn}}
         TF_VAR_cognito_admin_user_email: ${{inputs.cognito_admin_user_email}}
+        TF_VAR_db_username: ${{inputs.db_username}}
+        TF_VAR_db_password: ${{inputs.db_password}}
         TF_VAR_github_repository: ${{github.repository}}        
-      run: >
-        terraform plan
-
+      run: terraform apply -auto-approve -no-color
 
     
