@@ -51,7 +51,8 @@ runs:
         TF_VAR_cognito_admin_user_email: ${{inputs.cognito_admin_user_email}}
         TF_VAR_github_repository: ${{github.repository}}
       run: >
-        terraform plan
+        env
+        #terraform plan
 
 
     
