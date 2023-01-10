@@ -53,8 +53,8 @@ module "rds" {
   rds_sg_id       = module.security_group.rds_sg_id
   engine_version  = var.db_engine_version
   monitoring_role = module.iam.rds_monitoring_role_arn
-
 }
+
 
 module "ecs" {
   source                       = "./module/ecs"
