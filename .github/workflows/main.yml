@@ -4,14 +4,11 @@ on:
   push:
     paths:
       - 'app/**'  
-      - 'infra/**'  
     branches:
       - main
 env:
   APP: workout
   ENV: staging
-  TF_VER: 1.3.6
-  DB_ENGINE_VERSION: 13.6
   FRONT_CONTAINER_BUILD_TARGET: prd
 
 permissions:
@@ -22,7 +19,6 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      infra: ${{steps.filter.outputs.infra}}
       app_front: ${{steps.filter.outputs.app_front}}
       app_back: ${{steps.filter.outputs.app_back}}
     steps:
@@ -31,8 +27,6 @@ jobs:
         id: filter
         with:
           filters: |
-            infra:
-              - 'infra/**'
             app_front:
               - 'app/containers/frontend/**'
               - 'app/react_frontend/**'
@@ -40,28 +34,6 @@ jobs:
             app_back:
               - 'app/containers/backend/**'
               - 'app/rails/**'
-  infra:
-    needs: changes
-    if: ${{needs.changes.outputs.infra == 'true'}}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: exec_terraform
-        uses: ./.github/actions/exec_terraform
-        with:
-          app: ${{env.APP}}
-          env: ${{env.ENV}}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          region: ${{secrets.REGION}}
-          iam_role: arn:aws:iam::${{secrets.ACCOUNT_ID}}:role/${{env.APP}}-github-actions-role-${{env.ENV}}
-          tf_ver: ${{env.TF_VER}}
-          tf_bucket: ${{secrets.TF_BUCKET}}
-          acm_arn: ${{secrets.ACM_ARN}}
-          cognito_admin_user_email:  ${{secrets.COGNITO_ADMIN_USER_EMAIL}}
-          db_engine_version: ${{env.DB_ENGINE_VERSION}}
-          db_username: ${{secrets.DB_USERNAME}}
-          db_password: ${{secrets.DB_PASSWORD}}
   app_front:
     needs: changes
     if: ${{needs.changes.outputs.app_front == 'true'}}
