@@ -1,5 +1,5 @@
 resource "aws_iam_role" "rds_monitoring_role" {
-  name               = "${var.app}-ecs-task-role-${var.env}"
+  name               = "${var.app}-rds-monitoring-role-${var.env}"
   assume_role_policy = data.aws_iam_policy_document.assume_role_for_rds_monitoring_role.json
 }
 data "aws_iam_policy_document" "assume_role_for_rds_monitoring_role" {

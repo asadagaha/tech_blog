@@ -12,6 +12,7 @@ env:
   ENV: staging
   TF_VER: 1.3.6
   DB_ENGINE_VERSION: 13.6
+  FRONT_CONTAINER_BUILD_TARGET: prd
 
 permissions:
   id-token: write
@@ -51,6 +52,7 @@ jobs:
         with:
           app: ${{env.APP}}
           env: ${{env.ENV}}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           region: ${{secrets.REGION}}
           iam_role: arn:aws:iam::${{secrets.ACCOUNT_ID}}:role/${{env.APP}}-github-actions-role-${{env.ENV}}
           tf_ver: ${{env.TF_VER}}
@@ -73,6 +75,10 @@ jobs:
           iam_role: arn:aws:iam::${{secrets.ACCOUNT_ID}}:role/${{env.APP}}-github-actions-role-${{env.ENV}}
           repository: ${{env.APP}}-front-${{env.ENV}}
           dockerfile_dir: ./app/containers/frontend/Dockerfile
+          args: |
+            "
+            FRONT_CONTAINER_BUILD_TARGET: ${{env.FRONT_CONTAINER_BUILD_TARGET}}
+            "
   app_back:
     needs: changes
     if: ${{needs.changes.outputs.app_back == 'true'}}
@@ -86,3 +92,10 @@ jobs:
           iam_role: arn:aws:iam::${{secrets.ACCOUNT_ID}}:role/${{env.APP}}-github-actions-role-${{env.ENV}}
           repository: ${{env.APP}}-back-${{env.ENV}}
           dockerfile_dir: ./app/containers/backend/Dockerfile
+          args: |
+            "
+            DB_USERNAME: ${{secrets.DB_USERNAME}}
+            DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+            DB_HOST: ${{secrets.DB_PASSWORD}}
+            DB_NAME: ${{env.APP}}
+            "
