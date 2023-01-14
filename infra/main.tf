@@ -24,48 +24,8 @@ module "cognito" {
   region           = var.region
   admin_user_email = var.cognito_admin_user_email
 }
-module "cloudwatch" {
-  source = "./module/cloudwatch"
-  app    = var.app
-  env    = var.env
-}
-module "elb" {
-  source     = "./module/elb"
-  app        = var.app
-  env        = var.env
-  vpc_id     = module.vpc.vpc_id
-  subnet_ids = [module.vpc.subned_public_1a_id, module.vpc.subned_public_1c_id]
-  alb_sg_id  = module.security_group.alb_sg_id
-  acm_arn    = var.acm_arn
-}
 module "ecr" {
   source = "./module/ecr"
   app    = var.app
   env    = var.env
-}
-module "rds" {
-  source          = "./module/rds"
-  app             = var.app
-  env             = var.env
-  username        = var.db_username
-  password        = var.db_password
-  subnet_ids      = [module.vpc.subned_private_1a_id, module.vpc.subned_private_1c_id]
-  rds_sg_id       = module.security_group.rds_sg_id
-  engine_version  = var.db_engine_version
-  monitoring_role = module.iam.rds_monitoring_role_arn
-}
-
-
-module "ecs" {
-  source                       = "./module/ecs"
-  account_id                   = local.account_id
-  region                       = var.region
-  app                          = var.app
-  env                          = var.env
-  vpc_id                       = module.vpc.vpc_id
-  target_group_arn             = module.elb.target_group_arn
-  subnet_ids                   = [module.vpc.subned_public_1a_id, module.vpc.subned_public_1c_id]
-  ecs_sg_id                    = module.security_group.ecs_sg_id
-  ecs_task_execution_role_arn  = module.iam.ecs_task_execution_role_arn
-  cloudwatch_log_group_for_ecs = module.cloudwatch.cloudwatch_log_group_for_ecs
 }

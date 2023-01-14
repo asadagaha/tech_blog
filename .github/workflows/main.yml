@@ -7,7 +7,7 @@ on:
     branches:
       - main
 env:
-  APP: workout
+  APP: blog
   ENV: staging
   FRONT_CONTAINER_BUILD_TARGET: prd
 

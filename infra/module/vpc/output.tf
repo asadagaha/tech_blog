@@ -16,7 +16,6 @@ output "subned_private_1a_id" {
 output "subned_private_1c_id" {
   value = aws_subnet.private_1c.id
 }
-
 output "route_table_id" {
   value = aws_route_table.public.id
 }
